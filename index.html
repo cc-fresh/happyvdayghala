@@ -5,40 +5,41 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>For Ghala ❤️</title>
   <style>
+        // ---- Loader mini-game ----
     const loader = document.getElementById("loader");
-const loaderHeart = document.getElementById("loaderHeart");
-const tapCountEl = document.getElementById("tapCount");
-
-let taps = 0;
-
-// tiny mini-game while loading
-if (loaderHeart) {
-  const tap = () => {
-    taps++;
-    if (tapCountEl) tapCountEl.textContent = String(taps);
-    loaderHeart.style.transform = `scale(${1 + Math.min(taps, 15) * 0.02})`;
-  };
-
-  loaderHeart.addEventListener("click", tap);
-  loaderHeart.addEventListener("touchstart", (e) => {
-    e.preventDefault();
-    tap();
-  }, { passive: false });
-}
-
-// hide loader FAST (don’t wait for images/music)
-window.addEventListener("DOMContentLoaded", () => {
-  if (!loader) return;
-  loader.classList.add("hide");
-  setTimeout(() => loader.remove(), 450);
-});
-
-// failsafe so it NEVER gets stuck
-setTimeout(() => {
-  if (!loader) return;
-  loader.classList.add("hide");
-  setTimeout(() => loader.remove(), 450);
-}, 2500);
+    const loaderHeart = document.getElementById("loaderHeart");
+    const tapCountEl = document.getElementById("tapCount");
+    
+    let taps = 0;
+    
+    // tiny mini-game while loading
+    if (loaderHeart) {
+      const tap = () => {
+        taps++;
+        if (tapCountEl) tapCountEl.textContent = String(taps);
+        loaderHeart.style.transform = `scale(${1 + Math.min(taps, 15) * 0.02})`;
+      };
+    
+      loaderHeart.addEventListener("click", tap);
+      loaderHeart.addEventListener("touchstart", (e) => {
+        e.preventDefault();
+        tap();
+      }, { passive: false });
+    }
+    
+    // hide loader FAST (don’t wait for images/music)
+    window.addEventListener("DOMContentLoaded", () => {
+      if (!loader) return;
+      loader.classList.add("hide");
+      setTimeout(() => loader.remove(), 450);
+    });
+    
+    // failsafe so it NEVER gets stuck
+    setTimeout(() => {
+      if (!loader) return;
+      loader.classList.add("hide");
+      setTimeout(() => loader.remove(), 450);
+    }, 2500);
 
     body {
       margin: 0;
@@ -365,40 +366,42 @@ setTimeout(() => {
       font-size: 13px;
       backdrop-filter: blur(8px);
     }
-    .loader{
-  position: fixed; inset: 0;
-  display: grid; place-items: center;
-  background: linear-gradient(135deg, #7c3aed, #ec4899);
-  z-index: 99999;
-}
-.loader-card{
-  width: min(420px, 90vw);
-  background: rgba(255,255,255,0.14);
-  border: 1px solid rgba(255,255,255,0.22);
-  border-radius: 22px;
-  padding: 22px;
-  box-shadow: 0 18px 55px rgba(0,0,0,0.35);
-  backdrop-filter: blur(12px);
-}
-.loader-title{ font-size: 22px; font-weight: 900; margin-bottom: 8px; }
-.loader-sub{ opacity: 0.9; font-weight: 700; }
-.loader-heart{
-  font-size: 60px;
-  margin: 14px 0;
-  cursor: pointer;
-  user-select: none;
-  animation: pulse 1s infinite;
-}
-.loader.hide{
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.35s ease;
-}
+      /* --- Loader mini-game --- */
+  .loader{
+    position: fixed; inset: 0;
+    display: grid; place-items: center;
+    background: linear-gradient(135deg, #7c3aed, #ec4899);
+    z-index: 99999;
+  }
+  .loader-card{
+    width: min(420px, 90vw);
+    background: rgba(255,255,255,0.14);
+    border: 1px solid rgba(255,255,255,0.22);
+    border-radius: 22px;
+    padding: 22px;
+    box-shadow: 0 18px 55px rgba(0,0,0,0.35);
+    backdrop-filter: blur(12px);
+  }
+  .loader-title{ font-size: 22px; font-weight: 900; margin-bottom: 8px; }
+  .loader-sub{ opacity: 0.9; font-weight: 700; }
+  .loader-heart{
+    font-size: 60px;
+    margin: 14px 0;
+    cursor: pointer;
+    user-select: none;
+    animation: pulse 1s infinite;
+  }
+  .loader.hide{
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.35s ease;
+  }
 
   </style>
 </head>
 <body>
-  <div id="loader" class="loader">
+<!-- Loader (mini game) -->
+<div id="loader" class="loader">
   <div class="loader-card">
     <div class="loader-title">loading love… 💜</div>
     <div class="loader-sub">tap the heart to speed it up</div>
@@ -407,6 +410,7 @@ setTimeout(() => {
   </div>
 </div>
 
+<div id="debugBadge" class="debug-badge">js: loading…</div>
 
   <!-- Intro -->
   <div class="section">
@@ -425,7 +429,6 @@ setTimeout(() => {
     </div>
 
     <audio id="bgMusic" src="song.mp3" loop preload="none"></audio>
-
   </div>
 
   <!-- Photo popup (bigger view) -->
@@ -938,9 +941,7 @@ setTimeout(() => {
       // secret bonus ending for 30+
       if (score >= 30) {
         setTimeout(() => {
-          alert("bonus unlocked ✨
-
-you found the hidden ending!! i love you forever ghala 💜");
+          alert("bonus unlocked ✨\n\nyou found the hidden ending!! i love you forever ghala 💜");
         }, 400);
       }
     }
@@ -984,9 +985,7 @@ you found the hidden ending!! i love you forever ghala 💜");
     function heartTap() {
       heartTaps++;
       if (heartTaps === 5) {
-        alert("secret message 💜
-
-i love you more than words can explain!!");
+        alert("secret message 💜\n\ni love you more than words can explain!!");
       }
     }
 
