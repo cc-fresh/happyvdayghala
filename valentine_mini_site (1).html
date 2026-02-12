@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>For Ghala ❤️</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #7c3aed, #ec4899);
+      color: #fff;
+      text-align: center;
+      overflow-x: hidden;
+    }
+
+    .section {
+      padding: 60px 20px;
+      max-width: 880px;
+      margin: auto;
+    }
+
+    h1, h2 { margin: 0 0 20px; }
+
+    .heart {
+      font-size: 60px;
+      animation: pulse 1.2s infinite;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.2); }
+      100% { transform: scale(1); }
+    }
+
+    button {
+      padding: 12px 24px;
+      font-size: 18px;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      margin: 10px;
+      transition: 0.2s ease;
+    }
+
+    #yesBtn { background: #ec4899; color: #fff; }
+    #noBtn { background: #fff; color: #7c3aed; position: relative; }
+
+    #musicBtn {
+      background: rgba(255,255,255,0.18);
+      color: #fff;
+      border: 1px solid rgba(255,255,255,0.35);
+    }
+
+    .hidden { display: none; }
+
+    .card {
+      background: rgba(255,255,255,0.12);
+      border-radius: 20px;
+      padding: 25px;
+      margin: 20px 0;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.22);
+      text-align: left;
+      line-height: 1.6;
+    }
+
+    .photo-bubbles {
+      display: flex;
+      gap: 14px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin: 28px auto 0;
+    }
+
+    .bubble {
+      width: 84px;
+      height: 84px;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 3px solid rgba(255,255,255,0.75);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.18);
+      cursor: pointer;
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    .bubble:hover {
+      transform: scale(1.08);
+      box-shadow: 0 14px 30px rgba(0,0,0,0.25);
+    }
+
+    .bubble img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+    /* Enlarged photo popup (bigger, not fullscreen image; background dims) */
+    .photo-popup {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0,0,0,0.5);
+      backdrop-filter: blur(6px);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease;
+      z-index: 999;
+      padding: 18px;
+      box-sizing: border-box;
+    }
+
+    .photo-popup.active { opacity: 1; pointer-events: all; }
+
+    .popup-card {
+      width: min(380px, 88vw);
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.22);
+      border-radius: 22px;
+      padding: 14px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+      animation: popIn 0.25s ease;
+    }
+
+    .popup-card img {
+      width: 100%;
+      border-radius: 16px;
+      display: block;
+    }
+
+    .popup-caption {
+      margin-top: 10px;
+      opacity: 0.95;
+      font-weight: 700;
+    }
+
+    @keyframes popIn {
+      from { transform: scale(0.86); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    /* --- Mini game --- */
+    .game-wrap {
+      margin: 24px auto 0;
+      max-width: 560px;
+      background: rgba(255,255,255,0.14);
+      border-radius: 22px;
+      padding: 18px;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.22);
+      box-shadow: 0 12px 30px rgba(0,0,0,0.18);
+    }
+
+    .game-top {
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 12px;
+      align-items: center;
+    }
+
+    .pill {
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.18);
+      border: 1px solid rgba(255,255,255,0.22);
+      font-weight: 700;
+    }
+
+    #startGameBtn {
+      background: rgba(255,255,255,0.2);
+      color: #fff;
+      border: 1px solid rgba(255,255,255,0.35);
+    }
+
+    #gameArea {
+      position: relative;
+      width: 100%;
+      height: 360px;
+      border-radius: 18px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.25);
+      background: rgba(0,0,0,0.08);
+      touch-action: manipulation;
+      user-select: none;
+    }
+
+    .target {
+      position: absolute;
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      font-size: 26px;
+      background: rgba(255,255,255,0.22);
+      border: 2px solid rgba(255,255,255,0.55);
+      box-shadow: 0 10px 18px rgba(0,0,0,0.18);
+      cursor: pointer;
+    }
+
+    @media (max-width: 520px) {
+      #gameArea { height: 320px; }
+      .target { width: 52px; height: 52px; font-size: 24px; }
+      .bubble { width: 76px; height: 76px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Intro -->
+  <div class="section">
+    <div class="heart" id="bigHeart" title="psst… tap me 5 times">❤️</div>
+    <h1>Hi Ghala</h1>
+    <p>I KNOW UR MY VALENTINE ALREADY BUT PLS let me still do something special for you 😭💜</p>
+
+    <div class="photo-bubbles" id="photoBubbles">
+      <div class="bubble"><img src="ghala1.jpg" alt="Ghala photo 1" data-caption="my favorite smile 💜" /></div>
+      <div class="bubble"><img src="ghala2.jpg" alt="Ghala photo 2" data-caption="pretty girl alert 😭" /></div>
+      <div class="bubble"><img src="ghala3.jpg" alt="Ghala photo 3" data-caption="i love you fr" /></div>
+    </div>
+
+    <div style="margin-top:18px;">
+      <button id="musicBtn">Play our song 🎶</button>
+    </div>
+
+    <audio id="bgMusic" src="song.mp3" loop></audio>
+  </div>
+
+  <!-- Photo popup (bigger view) -->
+  <div id="photoPopup" class="photo-popup" aria-hidden="true">
+    <div class="popup-card" role="dialog" aria-label="Photo preview">
+      <img id="popupImg" src="" alt="" />
+      <div id="popupCaption" class="popup-caption"></div>
+    </div>
+  </div>
+
+  <!-- Funny Question -->
+  <div class="section">
+    <h1>Will you keep being my Valentine?</h1>
+    <button id="yesBtn">Yes ❤️</button>
+    <button id="noBtn">No 😭</button>
+    <p id="answer" class="hidden">YAYAYAYYAAYYA 💞💞💞</p>
+  </div>
+
+  <!-- Story -->
+  <div class="section">
+    <h2>our story 💜</h2>
+
+    <div class="card">
+      <h3>the day we met</h3>
+      <p>
+        I wasn’t expecting us to fall in love with each other, but I always knew we had something special because we click instantly and were always comfortable with each other despite only speaking occasionally. Even when we didn’t talk nonstop, the comfort never left. That instant connection felt rare—like something my heart recognized before my mind could explain it. From the beginning, it didn’t feel forced. It felt easy. It felt safe. And deep down, I knew we had something real that didn’t happen every day.
+      </p>
+    </div>
+
+    <div class="card">
+      <h3>the time i realized i were in love</h3>
+      <p>
+        The time I realized I had feelings for you was when I was lost and confused, doubting myself that I would never ever fall in love with someone again. Then you came along and rekindle my flame. I am so glad I met you and I don't ever regret falling in love with you. You reminded me that love can come back even after you think your heart is done trying. You brought warmth to a place in me that had been cold for a long time—and that changed everything.
+      </p>
+    </div>
+
+    <div class="card">
+      <h3>my hope for our future</h3>
+      <p>
+        I hope that we can be together because it has been truly a long ride, one I don't want to end nor do I want to sever the bond we have. I know we have disagreed, argued, and even attempted cutting each other many times. But I still believe we are capable of maturing and being the best we can for each other. I love you so much and I wish you know how much I love you because I fought so so so hard for you and gave you the most chances i ever given a person just so I can be with you.
+      </p>
+    </div>
+
+    <div class="card">
+      <h3>a letter from me to you</h3>
+      <p>
+        Your mesmerizing eyes drown me into a sea of butterflies. You were always and still are the most gorgeous woman I've set my eyes upon. I cherish your personality because you are always wanting to help others and never want anyone to suffer regardless of who they are. You have a beautiful soul and mindset that lightens my life always, and you guide me towards that light when im in the dark.
+      </p>
+    </div>
+  </div>
+
+  <!-- Mini Game -->
+  <div class="section">
+    <h2>mini game 💗</h2>
+
+    <div class="game-wrap">
+      <div class="game-top">
+        <div class="pill">score: <span id="score">0</span></div>
+        <div class="pill">time: <span id="timeLeft">20</span>s</div>
+        <button id="startGameBtn">Start 💘</button>
+      </div>
+
+      <div id="gameArea" aria-label="Heart catch game"></div>
+
+      <p id="gameResult" class="hidden"></p>
+    </div>
+  </div>
+
+  <script>
+    // ---- Music ----
+    const bgMusic = document.getElementById("bgMusic");
+    const musicBtn = document.getElementById("musicBtn");
+
+    function tryPlayMusic() {
+      if (!bgMusic) return;
+      bgMusic.volume = 0.6;
+      const p = bgMusic.play();
+      if (p && typeof p.then === "function") p.then(() => {}).catch(() => {});
+    }
+
+    if (musicBtn && bgMusic) {
+      musicBtn.addEventListener("click", () => {
+        if (bgMusic.paused) tryPlayMusic();
+        else bgMusic.pause();
+      });
+    }
+
+    // ---- Photo enlarge (bigger, not fullscreen) ----
+    const popup = document.getElementById("photoPopup");
+    const popupImg = document.getElementById("popupImg");
+    const popupCaption = document.getElementById("popupCaption");
+    const bubbleImgs = document.querySelectorAll(".bubble img");
+
+    bubbleImgs.forEach((img) => {
+      img.addEventListener("click", () => {
+        popupImg.src = img.src;
+        popupImg.alt = img.alt || "";
+        popupCaption.textContent = img.dataset.caption || "";
+        popup.classList.add("active");
+        popup.setAttribute("aria-hidden", "false");
+      });
+
+      // iPad / phone
+      img.addEventListener("touchstart", (e) => {
+        e.preventDefault();
+        popupImg.src = img.src;
+        popupImg.alt = img.alt || "";
+        popupCaption.textContent = img.dataset.caption || "";
+        popup.classList.add("active");
+        popup.setAttribute("aria-hidden", "false");
+      }, { passive: false });
+    });
+
+    if (popup) {
+      popup.addEventListener("click", (e) => {
+        // clicking outside the card closes
+        if (e.target === popup) {
+          popup.classList.remove("active");
+          popup.setAttribute("aria-hidden", "true");
+        }
+      });
+    }
+
+    // ---- Yes / No ----
+    const yesBtn = document.getElementById("yesBtn");
+    const noBtn = document.getElementById("noBtn");
+    const answer = document.getElementById("answer");
+
+    if (yesBtn) {
+      yesBtn.addEventListener("click", () => {
+        answer?.classList.remove("hidden");
+        tryPlayMusic();
+      });
+    }
+
+    if (noBtn) {
+      let dodges = 0;
+      const dodge = () => {
+        dodges++;
+        if (dodges >= 4) {
+          noBtn.textContent = "fine YES 😭";
+          noBtn.style.transform = "translate(0px, 0px)";
+          return;
+        }
+        const x = Math.random() * 200 - 100;
+        const y = Math.random() * 200 - 100;
+        noBtn.style.transform = `translate(${x}px, ${y}px)`;
+      };
+
+      noBtn.addEventListener("mouseenter", dodge);
+      noBtn.addEventListener("touchstart", (e) => {
+        e.preventDefault();
+        dodge();
+      }, { passive: false });
+
+      noBtn.addEventListener("click", () => {
+        if (noBtn.textContent.includes("YES")) {
+          answer?.classList.remove("hidden");
+          tryPlayMusic();
+        }
+      });
+    }
+
+    // ---- Mini game ----
+    const messages = {
+      low: "AHAHAHAHAHA its okay ur still the best ily",
+      mid: "OKAY I SEE YOU GOOD JOB BABY",
+      high: "WTF UR SO GOOD HOWWWW",
+      ultra: "touch grass bud"
+    };
+
+    const gameArea = document.getElementById("gameArea");
+    const startBtn = document.getElementById("startGameBtn");
+    const scoreEl = document.getElementById("score");
+    const timeEl = document.getElementById("timeLeft");
+    const resultEl = document.getElementById("gameResult");
+
+    let score = 0;
+    let time = 20;
+    let running = false;
+
+    function spawnHeart() {
+      if (!running || !gameArea) return;
+      const heart = document.createElement("div");
+      heart.className = "target";
+      heart.textContent = "💗";
+      heart.style.left = Math.random() * 90 + "%";
+      heart.style.top = Math.random() * 80 + "%";
+
+      const pop = (e) => {
+        e?.preventDefault?.();
+        if (!running) return;
+        score++;
+        if (scoreEl) scoreEl.textContent = String(score);
+        heart.remove();
+      };
+
+      heart.addEventListener("click", pop, { passive: false });
+      heart.addEventListener("touchstart", pop, { passive: false });
+
+      gameArea.appendChild(heart);
+      setTimeout(() => heart.remove(), 900);
+    }
+
+    function endGame() {
+      running = false;
+      if (!resultEl) return;
+
+      if (score >= 70) resultEl.textContent = messages.ultra;
+      else if (score >= 50) resultEl.textContent = messages.high;
+      else if (score >= 10 && score < 30) resultEl.textContent = messages.mid;
+      else resultEl.textContent = messages.low;
+
+      resultEl.classList.remove("hidden");
+
+      // secret bonus ending for 30+
+      if (score >= 30) {
+        setTimeout(() => {
+          alert("bonus unlocked ✨\n\nyou found the hidden ending!! i love you forever ghala 💜");
+        }, 400);
+      }
+    }
+
+    function startGame() {
+      score = 0;
+      time = 20;
+      running = true;
+      if (scoreEl) scoreEl.textContent = "0";
+      if (timeEl) timeEl.textContent = String(time);
+      if (resultEl) resultEl.classList.add("hidden");
+      if (gameArea) gameArea.innerHTML = "";
+
+      const loop = setInterval(() => {
+        if (!running) return clearInterval(loop);
+        spawnHeart();
+        time--;
+        if (timeEl) timeEl.textContent = String(time);
+        if (time <= 0) {
+          clearInterval(loop);
+          endGame();
+        }
+      }, 200);
+    }
+
+    if (startBtn) startBtn.addEventListener("click", () => {
+      if (running) return;
+      startGame();
+    });
+
+    // ---- Secrets ----
+    // Secret 1: tap big heart 5 times
+    const bigHeart = document.getElementById("bigHeart");
+    let heartTaps = 0;
+
+    function heartTap() {
+      heartTaps++;
+      if (heartTaps === 5) {
+        alert("secret message 💜\n\ni love you more than words can explain!!");
+      }
+    }
+
+    if (bigHeart) {
+      bigHeart.addEventListener("click", heartTap);
+      bigHeart.addEventListener("touchstart", (e) => {
+        e.preventDefault();
+        heartTap();
+      }, { passive: false });
+    }
+
+    // Secret 3: press G for purple heart rain
+    document.addEventListener("keydown", (e) => {
+      if (String(e.key || "").toLowerCase() === "g") {
+        for (let i = 0; i < 20; i++) {
+          const rain = document.createElement("div");
+          rain.textContent = "💜";
+          rain.style.position = "fixed";
+          rain.style.left = Math.random() * 100 + "vw";
+          rain.style.top = "-20px";
+          rain.style.fontSize = "24px";
+          rain.style.pointerEvents = "none";
+          rain.style.transition = "transform 1.5s linear";
+
+          document.body.appendChild(rain);
+
+          setTimeout(() => {
+            rain.style.transform = "translateY(110vh)";
+          }, 10);
+
+          setTimeout(() => rain.remove(), 1600);
+        }
+      }
+    });
+
+    // --- basic runtime checks (console) ---
+    console.assert(!!musicBtn, "Missing #musicBtn");
+    console.assert(!!bgMusic, "Missing #bgMusic");
+    console.assert(!!yesBtn, "Missing #yesBtn");
+    console.assert(!!noBtn, "Missing #noBtn");
+    console.assert(!!popup, "Missing #photoPopup");
+    console.assert(!!popupImg, "Missing #popupImg");
+    console.assert(!!gameArea, "Missing #gameArea");
+    console.assert(!!startBtn, "Missing #startGameBtn");
+    console.assert(!!scoreEl, "Missing #score");
+    console.assert(!!timeEl, "Missing #timeLeft");
+    console.assert(!!resultEl, "Missing #gameResult");
+  </script>
+
+</body>
+</html>
