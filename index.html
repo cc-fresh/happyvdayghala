@@ -139,6 +139,116 @@
       to { transform: scale(1); opacity: 1; }
     }
 
+    /* --- Garden builder (basket) --- */
+    .garden-wrap {
+      margin: 24px auto 0;
+      max-width: 820px;
+      background: rgba(255,255,255,0.14);
+      border-radius: 22px;
+      padding: 18px;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.22);
+      box-shadow: 0 12px 30px rgba(0,0,0,0.18);
+      text-align: left;
+    }
+
+    .garden-grid { display: grid; grid-template-columns: 1fr; gap: 14px; }
+
+    .garden-controls {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      align-items: end;
+    }
+
+    .field {
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.22);
+      border-radius: 16px;
+      padding: 12px;
+    }
+
+    .field label {
+      display: block;
+      font-weight: 800;
+      margin-bottom: 8px;
+      opacity: 0.95;
+    }
+
+    .field select,
+    .field input[type="color"],
+    .field input[type="number"],
+    .field input[type="range"] {
+      width: 100%;
+      box-sizing: border-box;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.28);
+      background: rgba(0,0,0,0.12);
+      color: #fff;
+      padding: 10px;
+      outline: none;
+    }
+
+    .garden-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .garden-actions button { margin: 0; }
+
+    .pill-mini{
+      display:inline-flex; align-items:center; gap:8px;
+      padding:10px 12px; border-radius:999px;
+      background:rgba(255,255,255,0.16);
+      border:1px solid rgba(255,255,255,0.22);
+      font-weight:800; margin:6px 8px 0 0;
+    }
+
+    .dot{
+      width:14px; height:14px; border-radius:999px;
+      border:1px solid rgba(255,255,255,0.45);
+      box-shadow: 0 6px 14px rgba(0,0,0,0.2);
+    }
+
+    .xbtn{
+      background:rgba(0,0,0,0.18); color:#fff;
+      border:1px solid rgba(255,255,255,0.22);
+      border-radius:999px; width:26px; height:26px;
+      display:inline-grid; place-items:center; padding:0; cursor:pointer;
+    }
+
+    #gardenCanvas {
+      position: relative;
+      height: 380px;
+      border-radius: 18px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.25);
+      background:
+        radial-gradient(1200px 480px at 50% 30%, rgba(255,255,255,0.18), rgba(255,255,255,0.02)),
+        linear-gradient(180deg, rgba(80,200,120,0.20), rgba(0,0,0,0.10));
+    }
+
+    .garden-hint { margin-top:10px; opacity:0.9; font-size:14px; line-height:1.45; }
+
+    .flower {
+      position: absolute;
+      width: 64px;
+      height: 64px;
+      transform: translate(-50%, -50%);
+      user-select: none;
+      pointer-events: none;
+      filter: drop-shadow(0 10px 14px rgba(0,0,0,0.25));
+    }
+
+    .flower svg { width:100%; height:100%; display:block; }
+
+    @media (max-width: 720px) {
+      .garden-controls { grid-template-columns: 1fr; }
+      #gardenCanvas { height: 340px; }
+    }
+
     /* --- Mini game --- */
     .game-wrap {
       margin: 24px auto 0;
@@ -216,9 +326,9 @@
     <p>I KNOW UR MY VALENTINE ALREADY BUT PLS let me still do something special for you 😭💜</p>
 
     <div class="photo-bubbles" id="photoBubbles">
-      <div class="bubble"><img src="ghala1.jpg" alt="Ghala photo 1" data-caption="my favorite smile 💜" /></div>
-      <div class="bubble"><img src="ghala2.jpg" alt="Ghala photo 2" data-caption="pretty girl alert 😭" /></div>
-      <div class="bubble"><img src="ghala3.jpg" alt="Ghala photo 3" data-caption="i love you fr" /></div>
+      <div class="bubble"><img src="ghala1.jpg" alt="Ghala photo 1" data-caption="THIS FILTER SO CUTE ON U💜" /></div>
+      <div class="bubble"><img src="ghala2.jpg" alt="Ghala photo 2" data-caption="I LOVE UR DRAWINGS GOOPLA 😭" /></div>
+      <div class="bubble"><img src="ghala3.jpg" alt="Ghala photo 3" data-caption="UR LITERALLY PERFECT" /></div>
     </div>
 
     <div style="margin-top:18px;">
@@ -277,6 +387,76 @@
     </div>
   </div>
 
+  <!-- Garden Builder -->
+  <div class="section">
+    <h2>build a little garden 🌷</h2>
+    <p>add flowers to your basket, then hit <b>grow garden</b> 💜</p>
+
+    <div class="garden-wrap">
+      <div class="garden-grid">
+
+        <div class="garden-controls">
+          <div class="field">
+            <label for="basketFlowerType">flower type</label>
+            <select id="basketFlowerType">
+              <option value="daisy">daisy</option>
+              <option value="tulip">tulip</option>
+              <option value="rose">rose</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="basketFlowerColor">color</label>
+            <input id="basketFlowerColor" type="color" value="#ff66cc" />
+          </div>
+
+          <div class="field">
+            <label for="basketFlowerSize">size <span id="basketSizeReadout">64</span>px</label>
+            <input id="basketFlowerSize" type="range" min="44" max="96" value="64" />
+          </div>
+        </div>
+
+        <div class="garden-actions">
+          <button id="addToBasketBtn">Add to basket ➕</button>
+          <button id="growGardenBtn">Grow garden 🌿</button>
+          <button id="clearGardenBtn">Clear garden</button>
+          <button id="randomPaletteBtn">Random pink/purple</button>
+        </div>
+
+        <div class="field">
+          <label>basket</label>
+          <div id="basketList"></div>
+          <div class="garden-hint">tip: add multiple types + colors. tap the garden to plant a random basket flower.</div>
+        </div>
+
+        <div class="garden-controls">
+          <div class="field">
+            <label for="growCount">how many to grow</label>
+            <input id="growCount" type="number" min="1" max="160" value="35" />
+          </div>
+
+          <div class="field">
+            <label for="scatter">scatter</label>
+            <input id="scatter" type="range" min="0" max="100" value="100" />
+          </div>
+
+          <div class="field">
+            <label>garden status</label>
+            <div id="gardenStatus" style="font-weight:800; opacity:0.95;">empty</div>
+          </div>
+        </div>
+
+        <div id="gardenCanvas" aria-label="Garden canvas"></div>
+
+        <div class="garden-hint">
+          • add items to the basket, then grow 🌷<br />
+          • click/tap the garden to plant one random basket flower<br />
+          • this garden is for ghala 💜
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Mini Game -->
   <div class="section">
     <h2>mini game 💗</h2>
@@ -328,7 +508,6 @@
         popup.setAttribute("aria-hidden", "false");
       });
 
-      // iPad / phone
       img.addEventListener("touchstart", (e) => {
         e.preventDefault();
         popupImg.src = img.src;
@@ -341,7 +520,6 @@
 
     if (popup) {
       popup.addEventListener("click", (e) => {
-        // clicking outside the card closes
         if (e.target === popup) {
           popup.classList.remove("active");
           popup.setAttribute("aria-hidden", "true");
@@ -389,6 +567,209 @@
       });
     }
 
+    // ---- Garden builder (basket) ----
+    const gardenCanvas = document.getElementById("gardenCanvas");
+    const basketFlowerTypeEl = document.getElementById("basketFlowerType");
+    const basketFlowerColorEl = document.getElementById("basketFlowerColor");
+    const basketFlowerSizeEl = document.getElementById("basketFlowerSize");
+    const basketSizeReadoutEl = document.getElementById("basketSizeReadout");
+
+    const addToBasketBtn = document.getElementById("addToBasketBtn");
+    const growGardenBtn = document.getElementById("growGardenBtn");
+    const clearGardenBtn = document.getElementById("clearGardenBtn");
+    const randomPaletteBtn = document.getElementById("randomPaletteBtn");
+
+    const basketListEl = document.getElementById("basketList");
+    const growCountEl = document.getElementById("growCount");
+    const scatterEl = document.getElementById("scatter");
+    const gardenStatusEl = document.getElementById("gardenStatus");
+
+    const basket = [];
+
+    function clamp(n, min, max) { return Math.max(min, Math.min(max, n)); }
+
+    function setGardenStatus(text) {
+      if (gardenStatusEl) gardenStatusEl.textContent = text;
+    }
+
+    function flowerSVG(type, color) {
+      if (type === "tulip") {
+        return `
+          <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path d="M32 60c8 0 14-6 14-14V30c0-1-1-2-2-2-5 0-8 4-12 4s-7-4-12-4c-1 0-2 1-2 2v16c0 8 6 14 14 14z" fill="${color}"/>
+            <path d="M32 60c-2 0-3-2-3-4V28h6v28c0 2-1 4-3 4z" fill="rgba(255,255,255,0.35)"/>
+            <path d="M19 46c4 1 8-1 10-4-4 0-7-2-10-6-2 4-2 9 0 10z" fill="rgba(60,200,120,0.55)"/>
+            <path d="M45 46c-4 1-8-1-10-4 4 0 7-2 10-6 2 4 2 9 0 10z" fill="rgba(60,200,120,0.55)"/>
+          </svg>`;
+      }
+
+      if (type === "rose") {
+        return `
+          <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path d="M32 54c10 0 18-8 18-18S42 18 32 18 14 26 14 36s8 18 18 18z" fill="${color}"/>
+            <path d="M22 34c5-6 15-6 20 0-2 8-7 12-10 12s-8-4-10-12z" fill="rgba(255,255,255,0.18)"/>
+            <path d="M32 60c-2 0-3-2-3-4V40h6v16c0 2-1 4-3 4z" fill="rgba(255,255,255,0.35)"/>
+            <path d="M18 46c4 2 9 0 12-4-5 0-9-3-12-8-2 4-2 10 0 12z" fill="rgba(60,200,120,0.55)"/>
+            <path d="M46 46c-4 2-9 0-12-4 5 0 9-3 12-8 2 4 2 10 0 12z" fill="rgba(60,200,120,0.55)"/>
+          </svg>`;
+      }
+
+      return `
+        <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <g fill="rgba(255,255,255,0.92)">
+            <ellipse cx="32" cy="14" rx="8" ry="12"/>
+            <ellipse cx="47" cy="18" rx="8" ry="12" transform="rotate(35 47 18)"/>
+            <ellipse cx="54" cy="32" rx="8" ry="12" transform="rotate(90 54 32)"/>
+            <ellipse cx="47" cy="46" rx="8" ry="12" transform="rotate(145 47 46)"/>
+            <ellipse cx="32" cy="50" rx="8" ry="12"/>
+            <ellipse cx="17" cy="46" rx="8" ry="12" transform="rotate(35 17 46)"/>
+            <ellipse cx="10" cy="32" rx="8" ry="12" transform="rotate(90 10 32)"/>
+            <ellipse cx="17" cy="18" rx="8" ry="12" transform="rotate(145 17 18)"/>
+          </g>
+          <circle cx="32" cy="32" r="10" fill="${color}"/>
+          <path d="M32 60c-2 0-3-2-3-4V40h6v16c0 2-1 4-3 4z" fill="rgba(255,255,255,0.35)"/>
+          <path d="M20 46c4 2 8 1 10-2-4 0-7-2-10-6-2 4-2 7 0 8z" fill="rgba(60,200,120,0.55)"/>
+          <path d="M44 46c-4 2-8 1-10-2 4 0 7-2 10-6 2 4 2 7 0 8z" fill="rgba(60,200,120,0.55)"/>
+        </svg>`;
+    }
+
+    function renderBasket() {
+      if (!basketListEl) return;
+      basketListEl.innerHTML = "";
+
+      if (basket.length === 0) {
+        basketListEl.innerHTML = "<div style='opacity:0.85;'>no flowers yet… add some 💜</div>";
+        setGardenStatus("empty");
+        return;
+      }
+
+      setGardenStatus(`${basket.length} in basket`);
+
+      basket.forEach((item, idx) => {
+        const row = document.createElement("div");
+        row.className = "pill-mini";
+
+        const dot = document.createElement("span");
+        dot.className = "dot";
+        dot.style.background = item.color;
+
+        const text = document.createElement("span");
+        text.textContent = `${item.type} • ${item.size}px`;
+
+        const del = document.createElement("button");
+        del.className = "xbtn";
+        del.type = "button";
+        del.textContent = "×";
+        del.addEventListener("click", () => {
+          basket.splice(idx, 1);
+          renderBasket();
+        });
+
+        row.appendChild(dot);
+        row.appendChild(text);
+        row.appendChild(del);
+        basketListEl.appendChild(row);
+      });
+    }
+
+    if (basketSizeReadoutEl && basketFlowerSizeEl) {
+      basketSizeReadoutEl.textContent = String(basketFlowerSizeEl.value);
+      basketFlowerSizeEl.addEventListener("input", () => {
+        basketSizeReadoutEl.textContent = String(basketFlowerSizeEl.value);
+      });
+    }
+
+    function plantFlowerAt(clientX, clientY, item) {
+      if (!gardenCanvas) return;
+      const rect = gardenCanvas.getBoundingClientRect();
+      const x = clamp(clientX - rect.left, 10, rect.width - 10);
+      const y = clamp(clientY - rect.top, 18, rect.height - 18);
+
+      const el = document.createElement("div");
+      el.className = "flower";
+      el.style.left = `${x}px`;
+      el.style.top = `${y}px`;
+      el.style.width = `${item.size}px`;
+      el.style.height = `${item.size}px`;
+      el.style.transform = `translate(-50%, -50%) rotate(${Math.floor(Math.random() * 40 - 20)}deg)`;
+      el.innerHTML = flowerSVG(item.type, item.color);
+
+      gardenCanvas.appendChild(el);
+    }
+
+    function clearGarden() {
+      if (!gardenCanvas) return;
+      gardenCanvas.innerHTML = "";
+      setGardenStatus(basket.length ? `${basket.length} in basket` : "empty");
+    }
+
+    function growGarden() {
+      if (!gardenCanvas) return;
+      if (basket.length === 0) {
+        alert("add some flowers to the basket first 💜");
+        return;
+      }
+
+      const rect = gardenCanvas.getBoundingClientRect();
+      const count = clamp(Number(growCountEl?.value || 35), 1, 160);
+      const scatter = clamp(Number(scatterEl?.value || 100), 0, 100) / 100;
+
+      for (let i = 0; i < count; i++) {
+        const item = basket[Math.floor(Math.random() * basket.length)];
+        const x = rect.left + (Math.random() * rect.width * scatter + rect.width * (1 - scatter) * 0.5);
+        const y = rect.top + (Math.random() * rect.height * scatter + rect.height * (1 - scatter) * 0.5);
+        plantFlowerAt(x, y, item);
+      }
+
+      setGardenStatus(`grown: ${count}`);
+    }
+
+    function randomPinkPurple() {
+      const palette = ["#ff66cc", "#ec4899", "#c084fc", "#a855f7", "#7c3aed", "#f472b6"];
+      if (basketFlowerColorEl) basketFlowerColorEl.value = palette[Math.floor(Math.random() * palette.length)];
+    }
+
+    if (addToBasketBtn) {
+      addToBasketBtn.addEventListener("click", () => {
+        const item = {
+          type: basketFlowerTypeEl?.value || "daisy",
+          color: basketFlowerColorEl?.value || "#ff66cc",
+          size: Number(basketFlowerSizeEl?.value || 64)
+        };
+        basket.push(item);
+        renderBasket();
+      });
+    }
+
+    if (growGardenBtn) growGardenBtn.addEventListener("click", growGarden);
+    if (clearGardenBtn) clearGardenBtn.addEventListener("click", clearGarden);
+    if (randomPaletteBtn) randomPaletteBtn.addEventListener("click", randomPinkPurple);
+
+    if (gardenCanvas) {
+      gardenCanvas.addEventListener("click", (e) => {
+        if (basket.length === 0) {
+          alert("add flowers to the basket first 💜");
+          return;
+        }
+        const item = basket[Math.floor(Math.random() * basket.length)];
+        plantFlowerAt(e.clientX, e.clientY, item);
+      });
+
+      gardenCanvas.addEventListener("touchstart", (e) => {
+        const t = e.touches && e.touches[0];
+        if (!t) return;
+        e.preventDefault();
+        if (basket.length === 0) {
+          alert("add flowers to the basket first 💜");
+          return;
+        }
+        const item = basket[Math.floor(Math.random() * basket.length)];
+        plantFlowerAt(t.clientX, t.clientY, item);
+      }, { passive: false });
+    }
+
+    renderBasket();
+
     // ---- Mini game ----
     const messages = {
       low: "AHAHAHAHAHA its okay ur still the best ily",
@@ -403,9 +784,15 @@
     const timeEl = document.getElementById("timeLeft");
     const resultEl = document.getElementById("gameResult");
 
+    const GAME_SECONDS = 20;
+    const SPAWN_MS = 300;
+
     let score = 0;
-    let time = 20;
+    let time = GAME_SECONDS;
     let running = false;
+
+    let spawnInterval = null;
+    let clockInterval = null;
 
     function spawnHeart() {
       if (!running || !gameArea) return;
@@ -432,6 +819,11 @@
 
     function endGame() {
       running = false;
+      if (spawnInterval) clearInterval(spawnInterval);
+      if (clockInterval) clearInterval(clockInterval);
+      spawnInterval = null;
+      clockInterval = null;
+
       if (!resultEl) return;
 
       if (score >= 70) resultEl.textContent = messages.ultra;
@@ -453,23 +845,28 @@ you found the hidden ending!! i love you forever ghala 💜");
 
     function startGame() {
       score = 0;
-      time = 20;
+      time = GAME_SECONDS;
       running = true;
+
       if (scoreEl) scoreEl.textContent = "0";
       if (timeEl) timeEl.textContent = String(time);
       if (resultEl) resultEl.classList.add("hidden");
       if (gameArea) gameArea.innerHTML = "";
 
-      const loop = setInterval(() => {
-        if (!running) return clearInterval(loop);
+      if (spawnInterval) clearInterval(spawnInterval);
+      if (clockInterval) clearInterval(clockInterval);
+
+      spawnInterval = setInterval(() => {
+        if (!running) return;
         spawnHeart();
+      }, SPAWN_MS);
+
+      clockInterval = setInterval(() => {
+        if (!running) return;
         time--;
         if (timeEl) timeEl.textContent = String(time);
-        if (time <= 0) {
-          clearInterval(loop);
-          endGame();
-        }
-      }, 200);
+        if (time <= 0) endGame();
+      }, 1000);
     }
 
     if (startBtn) startBtn.addEventListener("click", () => {
