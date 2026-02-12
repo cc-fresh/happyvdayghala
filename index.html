@@ -407,6 +407,12 @@
     let time = 20;
     let running = false;
 
+    let spawnInterval = null;
+    let clockInterval = null;
+
+    
+
+
     function spawnHeart() {
       if (!running || !gameArea) return;
       const heart = document.createElement("div");
@@ -450,25 +456,43 @@
     }
 
     function startGame() {
-      score = 0;
-      time = 20;
-      running = true;
-      if (scoreEl) scoreEl.textContent = "0";
-      if (timeEl) timeEl.textContent = String(time);
-      if (resultEl) resultEl.classList.add("hidden");
-      if (gameArea) gameArea.innerHTML = "";
+  // reset
+  score = 0;
+  time = 30;             
+  running = true;
 
-      const loop = setInterval(() => {
-        if (!running) return clearInterval(loop);
-        spawnHeart();
-        time--;
-        if (timeEl) timeEl.textContent = String(time);
-        if (time <= 0) {
-          clearInterval(loop);
-          endGame();
-        }
-      }, 200);
+  if (scoreEl) scoreEl.textContent = "0";
+  if (timeEl) timeEl.textContent = String(time);
+  if (resultEl) resultEl.classList.add("hidden");
+  if (gameArea) gameArea.innerHTML = "";
+
+  // stop old intervals (prevents stacking + weird speed)
+  if (spawnInterval) clearInterval(spawnInterval);
+  if (clockInterval) clearInterval(clockInterval);
+
+  // spawn hearts fast (game difficulty)
+  spawnInterval = setInterval(() => {
+    if (!running) return;
+    spawnHeart();
+  }, 300); 
+
+  // timer updates once per second (correct speed)
+  clockInterval = setInterval(() => {
+    if (!running) return;
+    time--;
+    if (timeEl) timeEl.textContent = String(time);
+
+    if (time <= 0) {
+      running = false;
+      clearInterval(spawnInterval);
+      clearInterval(clockInterval);
+      spawnInterval = null;
+      clockInterval = null;
+      endGame();
     }
+  }, 1000);
+}
+
 
     if (startBtn) startBtn.addEventListener("click", () => {
       if (running) return;
