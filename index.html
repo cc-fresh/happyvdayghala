@@ -216,16 +216,16 @@
     <p>I KNOW UR MY VALENTINE ALREADY BUT PLS let me still do something special for you 😭💜</p>
 
     <div class="photo-bubbles" id="photoBubbles">
-      <div class="bubble"><img src="ghala1.jpg" alt="Ghala photo 1" data-caption="THIS FILTER SO CUTE ON U💜" /></div>
-      <div class="bubble"><img src="ghala2.jpg" alt="Ghala photo 2" data-caption="I LOVE UR DRAWINGS GOOPLA 😭" /></div>
-      <div class="bubble"><img src="ghala3.jpg" alt="Ghala photo 3" data-caption="BEAT ME AND ABUSE ME" /></div>
+      <div class="bubble"><img src="ghala1.jpg" alt="Ghala photo 1" data-caption="my favorite smile 💜" /></div>
+      <div class="bubble"><img src="ghala2.jpg" alt="Ghala photo 2" data-caption="pretty girl alert 😭" /></div>
+      <div class="bubble"><img src="ghala3.jpg" alt="Ghala photo 3" data-caption="i love you fr" /></div>
     </div>
 
     <div style="margin-top:18px;">
       <button id="musicBtn">Play our song 🎶</button>
     </div>
 
-    <audio id="bgMusic" src="The Marías - Nobody New.mp3" loop></audio>
+    <audio id="bgMusic" src="song.mp3" loop></audio>
   </div>
 
   <!-- Photo popup (bigger view) -->
@@ -407,12 +407,6 @@
     let time = 20;
     let running = false;
 
-    let spawnInterval = null;
-    let clockInterval = null;
-
-    
-
-
     function spawnHeart() {
       if (!running || !gameArea) return;
       const heart = document.createElement("div");
@@ -450,49 +444,33 @@
       // secret bonus ending for 30+
       if (score >= 30) {
         setTimeout(() => {
-          alert("bonus unlocked ✨\n\nyou found the hidden ending!! i love you forever ghala 💜");
+          alert("bonus unlocked ✨
+
+you found the hidden ending!! i love you forever ghala 💜");
         }, 400);
       }
     }
 
     function startGame() {
-  // reset
-  score = 0;
-  time = 30;             
-  running = true;
+      score = 0;
+      time = 20;
+      running = true;
+      if (scoreEl) scoreEl.textContent = "0";
+      if (timeEl) timeEl.textContent = String(time);
+      if (resultEl) resultEl.classList.add("hidden");
+      if (gameArea) gameArea.innerHTML = "";
 
-  if (scoreEl) scoreEl.textContent = "0";
-  if (timeEl) timeEl.textContent = String(time);
-  if (resultEl) resultEl.classList.add("hidden");
-  if (gameArea) gameArea.innerHTML = "";
-
-  // stop old intervals (prevents stacking + weird speed)
-  if (spawnInterval) clearInterval(spawnInterval);
-  if (clockInterval) clearInterval(clockInterval);
-
-  // spawn hearts fast (game difficulty)
-  spawnInterval = setInterval(() => {
-    if (!running) return;
-    spawnHeart();
-  }, 300); 
-
-  // timer updates once per second (correct speed)
-  clockInterval = setInterval(() => {
-    if (!running) return;
-    time--;
-    if (timeEl) timeEl.textContent = String(time);
-
-    if (time <= 0) {
-      running = false;
-      clearInterval(spawnInterval);
-      clearInterval(clockInterval);
-      spawnInterval = null;
-      clockInterval = null;
-      endGame();
+      const loop = setInterval(() => {
+        if (!running) return clearInterval(loop);
+        spawnHeart();
+        time--;
+        if (timeEl) timeEl.textContent = String(time);
+        if (time <= 0) {
+          clearInterval(loop);
+          endGame();
+        }
+      }, 200);
     }
-  }, 1000);
-}
-
 
     if (startBtn) startBtn.addEventListener("click", () => {
       if (running) return;
@@ -507,7 +485,9 @@
     function heartTap() {
       heartTaps++;
       if (heartTaps === 5) {
-        alert("secret message 💜\n\ni love you more than words can explain!!");
+        alert("secret message 💜
+
+i love you more than words can explain!!");
       }
     }
 
