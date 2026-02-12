@@ -315,6 +315,21 @@
       .target { width: 52px; height: 52px; font-size: 24px; }
       .bubble { width: 76px; height: 76px; }
     }
+  
+    /* debug badge (remove later) */
+    .debug-badge{
+      position: fixed;
+      right: 12px;
+      bottom: 12px;
+      z-index: 9999;
+      padding: 10px 12px;
+      border-radius: 999px;
+      background: rgba(0,0,0,0.28);
+      border: 1px solid rgba(255,255,255,0.22);
+      font-weight: 800;
+      font-size: 13px;
+      backdrop-filter: blur(8px);
+    }
   </style>
 </head>
 <body>
@@ -475,6 +490,18 @@
   </div>
 
   <script>
+    // ---- Debug (remove later) ----
+    const debugBadge = document.getElementById("debugBadge");
+    function setDebug(text){ if (debugBadge) debugBadge.textContent = text; }
+    setDebug("js: running ✅");
+    window.addEventListener("error", (e) => {
+      setDebug("js error: " + (e?.message || "unknown"));
+    });
+    window.addEventListener("unhandledrejection", (e) => {
+      const msg = (e?.reason && (e.reason.message || String(e.reason))) || "promise rejected";
+      setDebug("js error: " + msg);
+    });
+
     // ---- Music ----
     const bgMusic = document.getElementById("bgMusic");
     const musicBtn = document.getElementById("musicBtn");
@@ -934,5 +961,6 @@ i love you more than words can explain!!");
     console.assert(!!resultEl, "Missing #gameResult");
   </script>
 
+  <div id="debugBadge" class="debug-badge">js: loading…</div>
 </body>
 </html>
